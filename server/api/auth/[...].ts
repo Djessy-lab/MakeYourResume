@@ -24,11 +24,11 @@ export default NuxtAuthHandler({
       }
       return token;
     },
-    async session({ session, token }) {
-      // @ts-ignore
-      session.accessToken = token.accessToken;
-      return session;
-    },
+    // async session({ session, token }) {
+    //   // @ts-ignore
+    //   session.accessToken = token.accessToken;
+    //   return session;
+    // },
   },
   // @ts-ignore
   basePath: "/api/auth",
