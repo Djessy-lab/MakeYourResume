@@ -1,8 +1,16 @@
 <template>
-  <div>
-    <h2>Connexion</h2>
-    <Button @click="loginWithGoogle">Se connecter avec Google</Button>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
+  <h1 class="text-6xl font-serif text-center -mb-10 mt-10">Make Your Resume</h1>
+  <div class="flex justify-center items-center h-screen">
+    <div
+      class="w-[80%] p-32 rounded-2xl shadow-xl bg-gray-100 dark:bg-gray-800 transition-colors duration-500">
+      <h2 class="text-center text-2xl mb-8 font-prompt">Se connecter avec</h2>
+      <div class="flex flex-col gap-4">
+        <Button @click="loginWithGoogle" :level="4">
+          <Icon name="devicon:google" class="h-5 w-5 mr-4 items-center" />
+          Google
+        </Button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -10,13 +18,13 @@
 export default {
   data() {
     return {
-      errorMessage: '',
+      errorMessage: "",
     };
   },
   methods: {
     async loginWithGoogle() {
       const { signIn } = useAuth();
-      const baseUrl = "http://localhost:3000"
+      const baseUrl = "http://localhost:3000";
       try {
         await signIn("google", {
           callbackUrl: `${baseUrl}/`,

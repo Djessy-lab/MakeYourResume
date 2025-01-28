@@ -49,11 +49,18 @@
           </p>
           <div v-else :class="configsViewClasses">
             <div v-for="(config, index) in localUserConfigs" :key="index">
-              <Button @click="openConfig(config)">{{ config.configName }}</Button>
-              <Button :level="2" @click="askDeleteConfig(config)">Supprimer</Button>
+              <ConfigCard :config="config" hasOptionsCard @openConfig="openConfig"
+                @deleteConfig="askDeleteConfig(config)" @editConfig="editConfig(config)" />
             </div>
           </div>
         </div>
+      </div>
+      <div v-if="editConfigView">
+        <Icon name="line-md:arrow-left" class="text-gray-600 dark:text-white h-5 w-5 mt-5 ml-5 cursor-pointer" @click="
+          editConfigView = false;
+        configsView = true;
+        " />
+        <CVForm :userId="userId" @updateConfig="updateConfig" :configToEdit="currentConfig" />
       </div>
       <Modal v-if="showConfirmDialog" :modelValue="showConfirmDialog" @update:modelValue="showConfirmDialog = false"
         title="Confirmer la suppression" content="Êtes-vous sûr de vouloir supprimer ce CV ?" :buttons="buttonsModal" />
@@ -62,6 +69,8 @@
 </template>
 
 <script>
+import { exportPDF } from '../utils/pdfExporter';
+
 export default {
   name: "Dashboard",
   props: {
@@ -99,23 +108,6 @@ export default {
         type: "",
       },
       isToastVisible: false,
-      config: {
-        configName: 'CV1',
-        name: 'Djessy Coiffé',
-        poste: 'Développeur - Front-end',
-        experience: 'Plus de 12 ans d\'expérience',
-        contact: {
-          phone: '+336 74 11 36 35',
-          email: 'adrien.mercier@gmail.com',
-          location: 'Basé à Paris (75), France'
-        },
-        hardSkills: ['Microsoft Office', 'ACT! CRM (SAGE)', 'SalesForce.com'],
-        softSkills: ['Communication', 'Travail d\'équipe', 'Résolution de problèmes'],
-        interests: ['Fitness', 'Voyage', 'Théâtre'],
-        objectives: 'À la recherche d\'un nouveau défi pour améliorer mes compétences.',
-        education: 'Master en Marketing et Gestion des Affaires, ÉCOLE XXX (2008)',
-        professionalExperience: 'Ingénieur d\'affaires France/Europe du Sud, Société XXX | Paris, 01/2015-Présent'
-      }
     };
   },
   watch: {
@@ -199,9 +191,10 @@ export default {
       this.showConfirmDialog = true;
     },
     editConfig(config) {
-      // this.currentConfig = config;
-      // this.editConfigView = true;
-      // this.configsView = false;
+      this.currentConfig = config;
+      this.editConfigView = true;
+      this.configsView = false;
+      this.newConfigView = false;
     },
     async deleteConfig(config) {
       try {
@@ -215,13 +208,9 @@ export default {
         if (error) throw error;
         this.localUserConfigs = [...updatedConfigs];
         this.showConfirmDialog = false;
-        console.log('Configuration supprimée avec succès');
       } catch (error) {
         console.error('Erreur lors de la suppression de la configuration:', error);
       }
-    },
-    async exportConfig(config) {
-
     },
     triggerConfetti() {
       const colors = ["#bb0000", "#0000ee", "#f9ff33"];

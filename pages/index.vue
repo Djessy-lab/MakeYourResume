@@ -26,7 +26,6 @@ export default {
         const { getSession } = useAuth();
         try {
             const session = await getSession();
-            console.log("Données utilisateur :", session.user);
 
             await this.checkAndSaveUser(session.user);
         } catch (error) {
@@ -61,9 +60,7 @@ export default {
                     if (error) {
                         throw new Error('Erreur lors de l\'enregistrement de l\'utilisateur dans Supabase: ' + error.message);
                     }
-                    console.log("Utilisateur enregistré dans Supabase avec succès:", data);
-                } else {
-                    console.log("L'utilisateur existe déjà dans la base de données.");
+                    ("Utilisateur enregistré dans Supabase avec succès:", data);
                 }
 
                 this.userEmail = existingUser ? existingUser.email : user.email;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-white dark:bg-gray-800 min-h-screen">
     <CV :userName="userName" :config="config" />
   </div>
 </template>

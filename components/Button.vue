@@ -31,7 +31,7 @@ export default {
         1: "bg-gray-800 hover:bg-black text-white dark:bg-white dark:text-black dark:hover:bg-gray-100",
         2: "bg-red-600 hover:bg-red-700 text-white",
         3: "bg-gray-300 text-black",
-        4: "border dark:border-none bg-white dark:bg-gray-600 dark:hover:bg-gray-700 shadow hover:shadow-none transition-all duration-300",
+        4: "border dark:border-none dark:text-white bg-white dark:bg-gray-600 dark:hover:bg-gray-700 shadow hover:shadow-none transition-all duration-300",
         5: "text-gray-700 hover:text-black dark:text-white dark:hover:text-gray-300",
         6: "flex justify-between items-center w-full hover:bg-white dark:hover:bg-slate-900 rounded-lg text-blue-600 dark:text-blue-100",
         7: "flex justify-between items-center text-red-600 dark:text-red-100 hover:bg-white dark:hover:bg-slate-900 p-2 w-full rounded-lg cursor-pointer",

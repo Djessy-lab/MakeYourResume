@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-semibold mb-4 text-center">Création de CV</h2>
     <form @submit.prevent="handleSubmit" class="space-y-6 h-full flex flex-col justify-between">
       <div v-if="currentStep === 1" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Informations personnelles</h3>
+        <h3 class="text-lg font-medium">Qui êtes-vous ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Nom du CV:</span>
           <input type="text" v-model="formData.configName" required
@@ -22,8 +22,9 @@
         <FileUpload label="Ajouter une photo" @file-selected="handleFileSelected" />
       </div>
 
+
       <div v-if="currentStep === 2" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Contact</h3>
+        <h3 class="text-lg font-medium">Comment vous contacter ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Téléphone:</span>
           <input type="text" v-model="formData.contact.phone" required
@@ -42,7 +43,16 @@
       </div>
 
       <div v-if="currentStep === 3" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Compétences</h3>
+        <h3 class="text-lg font-medium">Présentez vous !</h3>
+        <label class="block">
+          <span class="text-gray-700 dark:text-white">Présentation :</span>
+          <textarea v-model="formData.objectives" required
+            class="mt-1 block w-full border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></textarea>
+        </label>
+      </div>
+
+      <div v-if="currentStep === 4" class="space-y-4 flex-grow">
+        <h3 class="text-lg font-medium">Quelles sont vos compétences ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Compétences techniques:</span>
           <div class="flex items-center space-x-2">
@@ -75,8 +85,8 @@
         </label>
       </div>
 
-      <div v-if="currentStep === 4" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Intérêts</h3>
+      <div v-if="currentStep === 5" class="space-y-4 flex-grow">
+        <h3 class="text-lg font-medium">Quels sont vos centre d'intérêts ?</h3>
         <div class="flex items-center space-x-2">
           <input type="text" v-model="newInterest" placeholder="Ajouter un intérêt"
             class="mt-1 block w-full border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
@@ -91,17 +101,9 @@
         </ul>
       </div>
 
-      <div v-if="currentStep === 5" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Objectifs</h3>
-        <label class="block">
-          <span class="text-gray-700 dark:text-white">Objectifs:</span>
-          <textarea v-model="formData.objectives" required
-            class="mt-1 block w-full border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></textarea>
-        </label>
-      </div>
 
       <div v-if="currentStep === 6" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Éducation</h3>
+        <h3 class="text-lg font-medium">Au niveau de l'école ?</h3>
         <div class="flex items-center space-x-2">
           <input type="text" v-model="newEducation" placeholder="Ajouter une formation"
             class="mt-1 block w-full border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
@@ -117,7 +119,7 @@
       </div>
 
       <div v-if="currentStep === 7" class="space-y-4 flex-grow">
-        <h3 class="text-lg font-medium">Expérience professionnelle</h3>
+        <h3 class="text-lg font-medium">Et pour finir les expériences professionnelles</h3>
         <div class="flex items-center space-x-2">
           <input type="text" v-model="newProfessionalExperience" placeholder="Ajouter une expérience"
             class="mt-1 block w-full border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
@@ -172,6 +174,12 @@ export default {
   },
   props: {
     userId: { type: String, default: "" },
+    configToEdit: { type: Object, default: null },
+  },
+  mounted() {
+    if (this.configToEdit) {
+      this.formData = { ...this.configToEdit };
+    }
   },
   methods: {
     nextStep() {
@@ -219,7 +227,7 @@ export default {
       try {
         const { $supabase } = useNuxtApp();
 
-        if (this.formData.photo) {
+        if (this.formData.photo && typeof this.formData.photo !== 'string') {
           const timestamp = Date.now();
           const cleanedFileName = this.formData.photo.name.replace(/[^a-zA-Z0-9.-]/g, '_');
           const uniqueFileName = `${timestamp}_${cleanedFileName}`;
@@ -235,7 +243,7 @@ export default {
             .getPublicUrl(data.path);
 
           if (urlError) throw urlError;
-          this.formData.photo = publicUrlData.publicUrl; 
+          this.formData.photo = publicUrlData.publicUrl;
         }
 
         const { data: user, error: fetchError } = await $supabase
@@ -246,9 +254,16 @@ export default {
 
         if (fetchError) throw fetchError;
 
-        const updatedConfigs = user.configs
-          ? [...user.configs, { ...this.formData }]
-          : [{ ...this.formData }];
+        let updatedConfigs;
+        if (this.configToEdit) {
+          updatedConfigs = user.configs.map(config =>
+            config.configName === this.configToEdit.configName ? { ...this.formData } : config
+          );
+        } else {
+          updatedConfigs = user.configs
+            ? [...user.configs, { ...this.formData }]
+            : [{ ...this.formData }];
+        }
 
         const { error: updateError } = await $supabase
           .from("users")
@@ -257,7 +272,6 @@ export default {
 
         if (updateError) throw updateError;
 
-        console.log("CV enregistré avec succès");
         this.$router.go("/");
       } catch (error) {
         console.error("Erreur lors de l'enregistrement du CV:", error);
