@@ -24,7 +24,7 @@ export default {
   methods: {
     async loginWithGoogle() {
       const { signIn } = useAuth();
-      const baseUrl = "http://localhost:3000";
+      const baseUrl = process.env.AUTH_ORIGIN || "https://make-your-resume-phi.vercel.app";
       try {
         await signIn("google", {
           callbackUrl: `${baseUrl}/`,
