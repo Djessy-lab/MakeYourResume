@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_KEY: process.env.SUPABASE_KEY,
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-      authOrigin: process.env.AUTH_ORIGIN,
+      authOrigin: process.env.AUTH_ORIGIN || 'https://make-your-resume-phi.vercel.app/',
       authSecret: process.env.AUTH_SECRET,
     },
   },
