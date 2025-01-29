@@ -26,8 +26,11 @@ export default {
         const { getSession } = useAuth();
         try {
             const session = await getSession();
-
-            await this.checkAndSaveUser(session.user);
+            if (session && session.user) {
+                await this.checkAndSaveUser(session.user);
+            } else {
+                console.error("Aucune session trouvée");
+            }
         } catch (error) {
             console.error("Erreur lors du callback :", error);
         }
