@@ -8,6 +8,12 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
     "@nuxtjs/color-mode",
   ],
+  auth: {
+    //@ts-ignore
+    secret: process.env.AUTH_SECRET,
+    origin: process.env.AUTH_ORIGIN,
+    enableGlobalAppMiddleware: true,
+  },
   runtimeConfig: {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     public: {
