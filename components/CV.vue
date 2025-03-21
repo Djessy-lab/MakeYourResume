@@ -60,27 +60,6 @@
 import { exportPDF } from "../utils/pdfExporter";
 export default {
   name: "CV",
-  // data() {
-  //   return {
-  //     config: {
-  //       configName: 'CV1',
-  //       name: 'Djessy Coiffé',
-  //       poste: 'Développeur - Front-end',
-  //       experience: 'Plus de 12 ans d\'expérience',
-  //       contact: {
-  //         phone: '+336 74 11 36 35',
-  //         email: 'adrien.mercier@gmail.com',
-  //         location: 'Basé à Paris (75), France'
-  //       },
-  //       hardSkills: ['Microsoft Office', 'ACT! CRM (SAGE)', 'SalesForce.com'],
-  //       softSkills: ['Communication', 'Travail d\'équipe', 'Résolution de problèmes'],
-  //       interests: ['Fitness', 'Voyage', 'Théâtre'],
-  //       objectives: 'À la recherche d\'un nouveau défi pour améliorer mes compétences.',
-  //       education: ['Master en Marketing et Gestion des Affaires, ÉCOLE XXX (2008)'],
-  //       professionalExperience: ['Ingénieur d\'affaires France/Europe du Sud, Société XXX | Paris, 01/2015-Présent']
-  //     }
-  //   }
-  // },
   props: {
     config: { type: Object, default: () => ({}) },
     userName: { type: String, default: "" },

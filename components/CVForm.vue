@@ -178,7 +178,19 @@ export default {
   },
   mounted() {
     if (this.configToEdit) {
-      this.formData = { ...this.configToEdit };
+      this.formData = {
+        ...this.formData,
+        ...this.configToEdit,
+        contact: {
+          ...this.formData.contact,
+          ...this.configToEdit.contact,
+        },
+        hardSkills: this.configToEdit.hardSkills || [],
+        softSkills: this.configToEdit.softSkills || [],
+        interests: this.configToEdit.interests || [],
+        education: this.configToEdit.education || [],
+        professionalExperience: this.configToEdit.professionalExperience || [],
+      };
     }
   },
   methods: {
