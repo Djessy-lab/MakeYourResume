@@ -9,8 +9,12 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
   ],
   auth: {
-    originEnvKey: "http://localhost:3000",  
-    baseURL: "http://localhost:3000/api/auth",
+    originEnvKey: process.env.NODE_ENV === "production"
+      ? process.env.PROD_URL
+      : "http://localhost:3000",
+    baseURL: process.env.NODE_ENV === "production"
+      ? `${process.env.PROD_URL}/api/auth`
+      : "http://localhost:3000/api/auth",
   },
   runtimeConfig: {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -19,7 +23,9 @@ export default defineNuxtConfig({
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_KEY: process.env.SUPABASE_KEY,
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-      authOrigin: process.env.AUTH_ORIGIN || "http://localhost:3000",
+      authOrigin: process.env.NODE_ENV === "production"
+        ? process.env.PROD_URL
+        : "http://localhost:3000",
     },
   },
 });

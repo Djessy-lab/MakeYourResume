@@ -32,5 +32,5 @@ export default NuxtAuthHandler({
   },
   // @ts-ignore
   basePath: "/api/auth",
-  baseUrl:  'http://localhost:3000',
+  baseUrl: runtimeConfig.public.authOrigin,
 });

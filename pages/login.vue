@@ -16,12 +16,13 @@
 
 <script setup>
 definePageMeta({
-  layout: 'default' 
+  layout: 'default'
 });
 const { signIn } = useAuth();
+const config = useRuntimeConfig();
 
 const loginWithGoogle = async () => {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = config.public.authOrigin;
   try {
     await signIn("google", {
       callbackUrl: `${baseUrl}/`,
