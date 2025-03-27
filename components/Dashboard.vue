@@ -213,7 +213,18 @@ export default {
       }
     },
     async updateConfig(configName) {},
-    async logout() {},
+    async logout() {
+      const { signOut } = useAuth();
+      try {
+        await signOut({
+          callbackUrl: "/login",
+        });
+        sessionStorage.clear();
+        localStorage.clear();
+      } catch (error) {
+        console.error("Erreur lors de la déconnexion :", error);
+      }
+    },
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },
