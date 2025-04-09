@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 dark:text-white shadow-lg rounded-lg h-[calc(100vh-6rem)] relative"
+    class="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 dark:text-white shadow-lg rounded-lg h-[calc(100vh)] relative"
   >
     <h2 class="text-2xl font-semibold mb-4 text-center">Création de CV</h2>
     <form
@@ -8,6 +8,36 @@
       class="space-y-6 h-full flex flex-col justify-between"
     >
       <div v-if="currentStep === 1" class="space-y-4 flex-grow">
+        <h3 class="text-lg font-medium">Choisissez un thème pour votre CV</h3>
+        <div class="grid grid-cols-2 gap-4 justify-items-center">
+          <div
+            v-for="(style, index) in cvStyles"
+            :key="index"
+            @click="formData.style = style"
+          >
+            <input
+              type="radio"
+              v-model="formData.style.value"
+              class="hidden"
+            />
+            <label
+              :class="[
+                'flex items-center cursor-pointer justify-center p-4 rounded-lg shadow-lg w-48 h-60 bg-cover',
+                formData.style === style
+                  ? 'border-2 border-blue-300 shadow-sm'
+                  : '',
+              ]"
+              :style="{ backgroundImage: `url(${style.image})` }"
+            >
+              <span class="text-xl font-bold">
+                {{ style.name }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="currentStep === 2" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Qui êtes-vous ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Nom du CV:</span>
@@ -42,7 +72,7 @@
         />
       </div>
 
-      <div v-if="currentStep === 2" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 3" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Comment vous contacter ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Téléphone:</span>
@@ -73,7 +103,7 @@
         </label>
       </div>
 
-      <div v-if="currentStep === 3" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 4" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Présentez vous !</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white">Présentation :</span>
@@ -85,7 +115,7 @@
         </label>
       </div>
 
-      <div v-if="currentStep === 4" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 5" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Quelles sont vos compétences ?</h3>
         <label class="block">
           <span class="text-gray-700 dark:text-white"
@@ -102,15 +132,26 @@
               <Icon name="line-md:plus" class="h-5 w-5 items-center" />
             </button>
           </div>
-          <ul class="mt-2">
-            <li
-              v-for="(skill, index) in formData.hardSkills"
-              :key="index"
-              class="text-gray-600"
-            >
-              {{ skill }}
-            </li>
-          </ul>
+          <draggable
+            v-model="formData.hardSkills"
+            group="hardSkills"
+            class="mt-2 space-y-2"
+            item-key="skill"
+          >
+            <template #item="{ element, index }">
+              <div
+                class="border shadow rounded-lg p-1 w-[95%] dark:border-none dark:bg-gray-900 dark:text-gray-200 mb-2 relative cursor-move bg-white"
+              >
+                <span class="text-gray-600">{{ element }}</span>
+                <button @click.prevent="removeHardSkill(index)">
+                  <Icon
+                    name="line-md:close"
+                    class="h-4 w-4 absolute top-2 right-2"
+                  />
+                </button>
+              </div>
+            </template>
+          </draggable>
         </label>
         <label class="block">
           <span class="text-gray-700 dark:text-white"
@@ -127,19 +168,30 @@
               <Icon name="line-md:plus" class="h-5 w-5 items-center" />
             </button>
           </div>
-          <ul class="mt-2">
-            <li
-              v-for="(skill, index) in formData.softSkills"
-              :key="index"
-              class="text-gray-600"
-            >
-              {{ skill }}
-            </li>
-          </ul>
+          <draggable
+            v-model="formData.softSkills"
+            group="softSkills"
+            class="mt-2 space-y-2"
+            item-key="skill"
+          >
+            <template #item="{ element, index }">
+              <div
+                class="border shadow rounded-lg p-1 w-[95%] dark:border-none dark:bg-gray-900 dark:text-gray-200 mb-2 relative cursor-move bg-white"
+              >
+                <span class="text-gray-600">{{ element }}</span>
+                <button @click.prevent="removeSoftSkill(index)">
+                  <Icon
+                    name="line-md:close"
+                    class="h-4 w-4 absolute top-2 right-2"
+                  />
+                </button>
+              </div>
+            </template>
+          </draggable>
         </label>
       </div>
 
-      <div v-if="currentStep === 5" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 6" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Quels sont vos centre d'intérêts ?</h3>
         <div class="flex items-center space-x-2">
           <input
@@ -152,18 +204,29 @@
             <Icon name="line-md:plus" class="h-5 w-5 items-center" />
           </button>
         </div>
-        <ul class="mt-2">
-          <li
-            v-for="(interest, index) in formData.interests"
-            :key="index"
-            class="text-gray-600"
-          >
-            {{ interest }}
-          </li>
-        </ul>
+        <draggable
+          v-model="formData.interests"
+          group="interests"
+          class="mt-2 space-y-2"
+          item-key="interest"
+        >
+          <template #item="{ element, index }">
+            <div
+              class="border shadow rounded-lg p-1 w-[95%] dark:border-none dark:bg-gray-900 dark:text-gray-200 mb-2 relative cursor-move bg-white"
+            >
+              <span class="text-gray-600">{{ element }}</span>
+              <button @click.prevent="removeInterest(index)">
+                <Icon
+                  name="line-md:close"
+                  class="h-4 w-4 absolute top-2 right-2"
+                />
+              </button>
+            </div>
+          </template>
+        </draggable>
       </div>
 
-      <div v-if="currentStep === 6" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 7" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Au niveau de l'école ?</h3>
         <div class="flex items-center space-x-2">
           <input
@@ -197,7 +260,7 @@
         <button @click.prevent="addEducation">
           <Icon name="line-md:plus" class="h-5 w-5 items-center" />
         </button>
-        <div class="h-[35%] overflow-auto">
+        <div class="h-[45%] overflow-auto">
           <draggable
             v-if="formData.education.length"
             :list="formData.education"
@@ -227,7 +290,7 @@
         </div>
       </div>
 
-      <div v-if="currentStep === 7" class="space-y-4 flex-grow">
+      <div v-if="currentStep === 8" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">
           Et pour finir les expériences professionnelles
         </h3>
@@ -263,7 +326,7 @@
         <button @click.prevent="addProfessionalExperience">
           <Icon name="line-md:plus" class="h-5 w-5 items-center" />
         </button>
-        <div class="h-[35%] overflow-auto">
+        <div class="h-[45%] overflow-auto">
           <draggable
             v-if="formData.professionalExperience.length"
             :list="formData.professionalExperience"
@@ -297,20 +360,27 @@
         class="flex justify-between absolute bottom-4 left-4 right-4 mt-4 mb-4"
       >
         <Button
+          v-if="currentStep === 1"
+          @click.prevent="nextStep"
+          label="Commencer"
+          :level="1"
+          class="ml-auto"
+        />
+        <Button
           v-if="currentStep > 1"
           @click.prevent="prevStep"
           label="Précédent"
           :level="4"
         />
         <Button
-          v-if="currentStep < 7"
+          v-if="currentStep < 8 && currentStep > 1"
           @click.prevent="nextStep"
           label="Suivant"
           :level="1"
           class="ml-auto"
         />
         <Button
-          v-if="currentStep === 7"
+          v-if="currentStep === 8"
           type="submit"
           label="Soumettre"
           :level="1"
@@ -335,8 +405,16 @@ export default {
       newHardSkill: "",
       newSoftSkill: "",
       newInterest: "",
-      newEducation: { title: "", description: "", period: { start: "", end: "" } },
-      newProfessionalExperience: { title: "", description: "", period: { start: "", end: "" } },
+      newEducation: {
+        title: "",
+        description: "",
+        period: { start: "", end: "" },
+      },
+      newProfessionalExperience: {
+        title: "",
+        description: "",
+        period: { start: "", end: "" },
+      },
       formData: {
         configName: "",
         photo: null,
@@ -353,7 +431,18 @@ export default {
         objectives: "",
         education: [],
         professionalExperience: [],
+        style: { name: "Classique", value: "classic" },
       },
+      cvStyles: [
+        { name: "Classique", value: "classic", image: "/img/style1.png" },
+        { name: "Moderne", value: "modern", image: "/img/style2.png" },
+        { name: "Minimaliste", value: "minimalist", image: "/img/style3.png" },
+        {
+          name: "Professionnel",
+          value: "professional",
+          image: "/img/style4.png",
+        },
+      ],
     };
   },
   props: {
@@ -414,7 +503,11 @@ export default {
             end: this.newEducation.period.end.trim(),
           },
         });
-        this.newEducation = { title: "", description: "", period: { start: "", end: "" } };
+        this.newEducation = {
+          title: "",
+          description: "",
+          period: { start: "", end: "" },
+        };
       }
     },
     addProfessionalExperience() {
@@ -429,7 +522,11 @@ export default {
             end: this.newProfessionalExperience.period.end.trim(),
           },
         });
-        this.newProfessionalExperience = { title: "", description: "", period: { start: "", end: "" } };
+        this.newProfessionalExperience = {
+          title: "",
+          description: "",
+          period: { start: "", end: "" },
+        };
       }
     },
     handleFileSelected({ file }) {
@@ -502,6 +599,15 @@ export default {
     },
     removeEducation(index) {
       this.formData.education.splice(index, 1);
+    },
+    removeHardSkill(index) {
+      this.formData.hardSkills.splice(index, 1);
+    },
+    removeSoftSkill(index) {
+      this.formData.softSkills.splice(index, 1);
+    },
+    removeInterest(index) {
+      this.formData.interests.splice(index, 1);
     },
   },
 };
