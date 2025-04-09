@@ -219,8 +219,6 @@ export default {
         await signOut({
           callbackUrl: "/login",
         });
-        sessionStorage.clear();
-        localStorage.clear();
       } catch (error) {
         console.error("Erreur lors de la déconnexion :", error);
       }

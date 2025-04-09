@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxtjs/color-mode",
     "@sidebase/nuxt-auth",
+    "@nuxt/fonts",
   ],
   auth: {
     originEnvKey: process.env.NODE_ENV === "production"

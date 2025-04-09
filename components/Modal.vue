@@ -7,7 +7,7 @@
     @click.self="close"
     style="z-index: 9999;"
   >
-    <div :class="modalSizeClass" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg overflow-scroll mx-auto">
+    <div :class="modalSizeClass" class="bg-white dark:bg-gray-800 dark:text-white p-6 rounded-lg shadow-lg overflow-scroll mx-auto">
       <div class="flex justify-between">
         <h3 class="text-lg font-semibold mb-4">{{ title }}</h3>
         <button v-if="closeButton" class="h-5 w-5" @click="close">
