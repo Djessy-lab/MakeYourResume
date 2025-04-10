@@ -5,8 +5,3 @@
     </NuxtLayout>
   </div>
 </template>
-<style>
-body{
-  font-family: "Roboto Flex";
-}
-</style>

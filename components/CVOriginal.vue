@@ -1,6 +1,7 @@
 <template>
   <div
     ref="cvContent"
+    id="cvOriginal"
     class="flex max-w-2xl mx-auto p-8 py-10 bg-white shadow-lg rounded-lg"
   >
     <div class="w-1/3 pr-6 border-r border-gray-300">
@@ -11,7 +12,7 @@
         class="rounded-full w-32 h-32 mx-auto mb-4 object-cover"
         style="object-position: center"
       />
-      <h1 class="text-2xl font-bold text-center text-blue-600">
+      <h1 class="text-xl font-bold text-center text-blue-600">
         {{ config.name }}
       </h1>
       <h2 class="text-lg font-semibold text-center mb-4">{{ config.poste }}</h2>
@@ -54,12 +55,12 @@
 
     <div class="w-2/3 pl-6">
       <div class="mb-4">
-        <h2 class="text-2xl font-semibold">OBJECTIFS</h2>
+        <h2 class="text-xl font-semibold">OBJECTIFS</h2>
         <p class="text-md">{{ config.objectives }}</p>
       </div>
 
       <div class="mb-4">
-        <h2 class="text-2xl font-semibold">ÉDUCATION</h2>
+        <h2 class="text-xl font-semibold">ÉDUCATION</h2>
         <div
           v-for="(education, index) in config.education.slice().reverse()"
           :key="index"
@@ -84,7 +85,7 @@
       </div>
 
       <div>
-        <h2 class="text-2xl font-semibold">EXPÉRIENCE PROFESSIONNELLE</h2>
+        <h2 class="text-xl font-semibold">EXPÉRIENCE PROFESSIONNELLE</h2>
         <div
           v-for="(experience, index) in config.professionalExperience
             .slice()
@@ -111,24 +112,21 @@
       </div>
     </div>
   </div>
-  <div class="sticky bottom-3 p-4">
-    <div class="flex justify-between">
-      <button
-        class="rounded-full shadow-xl hover:shadow-lg hover:translate-y-1 transition-all ease-in-out duration-200 w-16 h-16 bg-green-100"
-        @click="backHome"
-      >
-        <Icon
-          name="line-md:home-simple-filled"
-          class="w-6 h-6 text-green-800"
-        />
-      </button>
-      <button
-        class="rounded-full shadow-xl hover:shadow-lg hover:translate-y-1 transition-all ease-in-out duration-200 w-16 h-16 bg-blue-100"
-        @click="exportPDF"
-      >
-        <Icon name="line-md:downloading-loop" class="w-6 h-6 text-blue-800" />
-      </button>
-    </div>
+  <div class="fixed bottom-6 right-6 flex flex-col gap-4">
+    <button
+      class="rounded-full shadow-xl hover:shadow-md hover:scale-105 transition-all duration-200 w-12 h-12 bg-green-500 text-white flex items-center justify-center"
+      @click="backHome"
+      title="Return to Home"
+    >
+      <Icon name="line-md:home-simple" class="w-6 h-6" />
+    </button>
+    <button
+      class="rounded-full shadow-xl hover:shadow-md hover:scale-105 transition-all duration-200 w-12 h-12 bg-blue-500 text-white flex items-center justify-center"
+      @click="exportPDF"
+      title="Download PDF"
+    >
+      <Icon name="line-md:downloading-loop" class="w-6 h-6" />
+    </button>
   </div>
 </template>
 
@@ -151,3 +149,8 @@ export default {
   },
 };
 </script>
+<style>
+#cvOriginal {
+  font-family: "Roboto";
+}
+</style>

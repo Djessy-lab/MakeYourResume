@@ -9,7 +9,7 @@
     >
       <div v-if="currentStep === 1" class="space-y-4 flex-grow">
         <h3 class="text-lg font-medium">Choisissez un thème pour votre CV</h3>
-        <div class="grid grid-cols-2 gap-4 justify-items-center">
+        <div class="grid grid-cols-2 gap-4 m-20 justify-items-center">
           <div
             v-for="(style, index) in cvStyles"
             :key="index"
@@ -23,7 +23,7 @@
             <label
               :class="[
                 'flex items-center cursor-pointer justify-center p-4 rounded-lg shadow-lg w-48 h-60 bg-cover',
-                formData.style === style
+                formData.style.name === style.name
                   ? 'border-2 border-blue-300 shadow-sm'
                   : '',
               ]"
@@ -224,6 +224,50 @@
             </div>
           </template>
         </draggable>
+
+        <h3 class="text-lg font-medium mt-8">Quelles langues parlez-vous ?</h3>
+        <div class="flex items-center space-x-2">
+          <input
+            type="text"
+            v-model="newLanguage.name"
+            placeholder="Langue"
+            class="mt-1 block w-1/2 border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+          <select
+            v-model="newLanguage.level"
+            class="mt-1 block w-1/2 border-gray-300 bg-gray-100 dark:bg-gray-700 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          >
+            <option value="">Niveau</option>
+            <option value="Débutant">Débutant</option>
+            <option value="Intermédiaire">Intermédiaire</option>
+            <option value="Avancé">Avancé</option>
+            <option value="Bilingue">Bilingue</option>
+            <option value="Langue maternelle">Langue maternelle</option>
+          </select>
+          <button @click.prevent="addLanguage">
+            <Icon name="line-md:plus" class="h-5 w-5 items-center" />
+          </button>
+        </div>
+        <draggable
+          v-model="formData.languages"
+          group="languages"
+          class="mt-2 space-y-2"
+          item-key="name"
+        >
+          <template #item="{ element, index }">
+            <div
+              class="border shadow rounded-lg p-1 w-[95%] dark:border-none dark:bg-gray-900 dark:text-gray-200 mb-2 relative cursor-move bg-white"
+            >
+              <span class="text-gray-600">{{ element.name }} - {{ element.level }}</span>
+              <button @click.prevent="removeLanguage(index)">
+                <Icon
+                  name="line-md:close"
+                  class="h-4 w-4 absolute top-2 right-2"
+                />
+              </button>
+            </div>
+          </template>
+        </draggable>
       </div>
 
       <div v-if="currentStep === 7" class="space-y-4 flex-grow">
@@ -405,6 +449,10 @@ export default {
       newHardSkill: "",
       newSoftSkill: "",
       newInterest: "",
+      newLanguage: {
+        name: "",
+        level: ""
+      },
       newEducation: {
         title: "",
         description: "",
@@ -428,6 +476,7 @@ export default {
         hardSkills: [],
         softSkills: [],
         interests: [],
+        languages: [],
         objectives: "",
         education: [],
         professionalExperience: [],
@@ -529,6 +578,18 @@ export default {
         };
       }
     },
+    addLanguage() {
+      if (this.newLanguage.name && this.newLanguage.level) {
+        this.formData.languages.push({
+          name: this.newLanguage.name.trim(),
+          level: this.newLanguage.level
+        });
+        this.newLanguage = {
+          name: "",
+          level: ""
+        };
+      }
+    },
     handleFileSelected({ file }) {
       this.formData.photo = file;
     },
@@ -608,6 +669,9 @@ export default {
     },
     removeInterest(index) {
       this.formData.interests.splice(index, 1);
+    },
+    removeLanguage(index) {
+      this.formData.languages.splice(index, 1);
     },
   },
 };
